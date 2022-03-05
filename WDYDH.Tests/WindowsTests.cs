@@ -19,5 +19,15 @@ namespace WDYDH.Tests
 
             Assert.IsNotNull(cpu);
         }
+
+        [TestMethod]
+        public void NetworkInformation()
+        {
+            var winInfo = new WindowsHardwareInformation();
+
+            var net = winInfo.GetNetworkAdapters();
+
+            Assert.IsNotNull(net);
+        }
     }
 }
