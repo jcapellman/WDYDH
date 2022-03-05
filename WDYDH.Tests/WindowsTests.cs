@@ -29,5 +29,15 @@ namespace WDYDH.Tests
 
             Assert.IsNotNull(net);
         }
+
+        [TestMethod]
+        public void DriveInformation()
+        {
+            var winInfo = new WindowsHardwareInformation();
+
+            var drives = winInfo.GetStorageDevices();
+
+            Assert.IsNotNull(drives);
+        }
     }
 }

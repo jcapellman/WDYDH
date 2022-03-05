@@ -7,5 +7,7 @@ namespace WDYDH.lib.Windows.Abstractions
         public abstract CPUInformation GetCPUInformation();
 
         public abstract List<NetworkAdapter> GetNetworkAdapters();
+
+        public abstract List<StorageDevice> GetStorageDevices();
     }
 }
