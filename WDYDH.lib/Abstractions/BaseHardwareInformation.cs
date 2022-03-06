@@ -9,5 +9,7 @@ namespace WDYDH.lib.Windows.Abstractions
         public abstract List<NetworkAdapter> GetNetworkAdapters();
 
         public abstract List<StorageDevice> GetStorageDevices();
+
+        public abstract List<SystemMemory> GetSystemMemory();
     }
 }

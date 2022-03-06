@@ -100,5 +100,36 @@ namespace WDYDH.lib.Implementations
 
             return storageDevices;
         }
+
+        public override List<SystemMemory> GetSystemMemory()
+        {
+            var systemMemory = new List<SystemMemory>();
+
+            try
+            {
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
+
+                foreach (var obj in searcher.Get())
+                {
+                    var memory = new SystemMemory
+                    {
+                        Manufacturer = obj["Manufacturer"].ToString(),
+                        ClockSpeed = Convert.ToInt32(obj["Speed"]),
+                        SerialNumber = obj["SerialNumber"].ToString(),
+                        Size = Convert.ToUInt64(obj["Capacity"])
+                    };
+
+                    systemMemory.Add(memory);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return null;
+            }
+
+            return systemMemory;
+        }
     }
 }

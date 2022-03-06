@@ -39,5 +39,15 @@ namespace WDYDH.Tests
 
             Assert.IsNotNull(drives);
         }
+
+        [TestMethod]
+        public void SystemMemory()
+        {
+            var winInfo = new WindowsHardwareInformation();
+
+            var memory = winInfo.GetSystemMemory();
+
+            Assert.IsNotNull(memory);
+        }
     }
 }
