@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Management;
+﻿using System.Management;
 using System.Net.NetworkInformation;
 using System.Runtime.Versioning;
 
@@ -11,6 +10,42 @@ namespace WDYDH.lib.Implementations
     [SupportedOSPlatform("windows")]
     public class WindowsHardwareInformation : BaseHardwareInformation
     {
+        public override BIOSInformation GetBIOSInformation()
+        {
+            var biosInformation = new BIOSInformation();
+
+            try
+            {
+                var searchCollection = new ManagementObjectSearcher("select * from Win32_BIOS").Get();
+
+                ManagementObject? wmiObject = searchCollection.OfType<ManagementObject>().FirstOrDefault();
+
+                if (wmiObject == null)
+                {
+                    return null;
+                }
+
+                if (wmiObject["BIOSVersion"] is string)
+                {
+                    biosInformation.Name = wmiObject["BIOSVersion"].ToString().Trim();
+                } else
+                {
+                    biosInformation.Name = string.Join(" ", (string[])wmiObject["BIOSVersion"]);
+                }
+
+                biosInformation.Manufacturer = wmiObject["Manufacturer"].ToString();
+                biosInformation.SerialNumber = wmiObject["SerialNumber"].ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return null;
+            }
+
+            return biosInformation;
+        }
+
         public override CPUInformation? GetCPUInformation()
         {
             var cpuInformation = new CPUInformation();

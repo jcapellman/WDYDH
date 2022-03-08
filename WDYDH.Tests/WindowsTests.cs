@@ -21,6 +21,16 @@ namespace WDYDH.Tests
         }
 
         [TestMethod]
+        public void BIOSInformation()
+        {
+            var winInfo = new WindowsHardwareInformation();
+
+            var bios = winInfo.GetBIOSInformation();
+
+            Assert.IsNotNull(bios);
+        }
+
+        [TestMethod]
         public void NetworkInformation()
         {
             var winInfo = new WindowsHardwareInformation();
