@@ -6,7 +6,7 @@ namespace WDYDH.lib.Windows.Abstractions
     {
         public abstract BIOSInformation GetBIOSInformation();
 
-        public abstract CPUInformation GetCPUInformation();
+        public abstract List<CPUInformation> GetCPUInformation();
 
         public abstract List<NetworkAdapter> GetNetworkAdapters();
 

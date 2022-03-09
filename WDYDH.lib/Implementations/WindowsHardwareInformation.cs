@@ -46,26 +46,26 @@ namespace WDYDH.lib.Implementations
             return biosInformation;
         }
 
-        public override CPUInformation? GetCPUInformation()
+        public override List<CPUInformation> GetCPUInformation()
         {
-            var cpuInformation = new CPUInformation();
+            var cpuList = new List<CPUInformation>();
 
             try
             {
                 var searchCollection = new ManagementObjectSearcher("select * from Win32_Processor").Get();
 
-                ManagementObject? wmiObject = searchCollection.OfType<ManagementObject>().FirstOrDefault();
-
-                if (wmiObject == null)
+                foreach (var wmiObject in searchCollection)
                 {
-                    return null;
-                }
+                    var cpuInformation = new CPUInformation();
 
-                cpuInformation.CPUManufacturer = wmiObject["Manufacturer"].ToString().Trim();
-                cpuInformation.CPUName = wmiObject["Name"].ToString().Trim();
-                cpuInformation.CoreCount = Convert.ToInt32(wmiObject["NumberOfCores"]);
-                cpuInformation.LogicalCoreCount = Convert.ToInt32(wmiObject["NumberOfLogicalProcessors"]);
-                cpuInformation.CPUCoreSpeed = wmiObject["MaxClockSpeed"].ToString();
+                    cpuInformation.CPUManufacturer = wmiObject["Manufacturer"].ToString().Trim();
+                    cpuInformation.CPUName = wmiObject["Name"].ToString().Trim();
+                    cpuInformation.CoreCount = Convert.ToInt32(wmiObject["NumberOfCores"]);
+                    cpuInformation.LogicalCoreCount = Convert.ToInt32(wmiObject["NumberOfLogicalProcessors"]);
+                    cpuInformation.CPUCoreSpeed = wmiObject["MaxClockSpeed"].ToString();
+
+                    cpuList.Add(cpuInformation);
+                }
             } catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
@@ -73,7 +73,7 @@ namespace WDYDH.lib.Implementations
                 return null;
             }
 
-            return cpuInformation;
+            return cpuList;
         }
 
         public override List<NetworkAdapter>? GetNetworkAdapters()
