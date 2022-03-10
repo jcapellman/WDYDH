@@ -4,6 +4,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Copyright>Jarred Capellman</Copyright>
+    <PackageProjectUrl>https://github.com/jcapellman/WDYDH</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jcapellman/WDYDH</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
