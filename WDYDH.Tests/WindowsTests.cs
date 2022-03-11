@@ -41,6 +41,16 @@ namespace WDYDH.Tests
         }
 
         [TestMethod]
+        public void SystemDevices()
+        {
+            var winInfo = new WindowsHardwareInformation();
+
+            var devices = winInfo.SystemDevices;
+
+            Assert.IsNotNull(devices);
+        }
+
+        [TestMethod]
         public void DriveInformation()
         {
             var winInfo = new WindowsHardwareInformation();

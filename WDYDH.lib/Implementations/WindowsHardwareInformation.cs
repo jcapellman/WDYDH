@@ -185,5 +185,38 @@ namespace WDYDH.lib.Implementations
                 return systemMemory;
             }
         }
+
+        public override List<Device> SystemDevices {
+            get
+            {
+                var systemDevices = new List<Device>();
+
+                try
+                {
+                    ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_SystemDriver");
+
+                    foreach (var obj in searcher.Get())
+                    {
+                        var memory = new Device
+                        {
+                            Name = obj["Display Name"].ToString(),
+                            Path = obj["PathName"].ToString(),
+                            Status = obj["State"].ToString(),
+                            Type = obj["ServiceType"].ToString()
+                        };
+
+                        systemDevices.Add(memory);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+
+                    return null;
+                }
+
+                return systemDevices.OrderBy(a => a.Name).ToList();
+            }
+        }
     }
 }

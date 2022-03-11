@@ -13,5 +13,7 @@ namespace WDYDH.lib.Windows.Abstractions
         public abstract List<StorageDevice> StorageDevices { get; }
 
         public abstract List<SystemMemory> SystemMemory { get; }
+
+        public abstract List<Device> SystemDevices { get; }
     }
 }
