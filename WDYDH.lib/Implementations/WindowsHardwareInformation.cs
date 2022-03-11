@@ -10,161 +10,180 @@ namespace WDYDH.lib.Implementations
     [SupportedOSPlatform("windows")]
     public class WindowsHardwareInformation : BaseHardwareInformation
     {
-        public override BIOSInformation GetBIOSInformation()
+        public override BIOSInformation BIOSInformation
         {
-            var biosInformation = new BIOSInformation();
-
-            try
+            get
             {
-                var searchCollection = new ManagementObjectSearcher("select * from Win32_BIOS").Get();
+                var biosInformation = new BIOSInformation();
 
-                ManagementObject? wmiObject = searchCollection.OfType<ManagementObject>().FirstOrDefault();
-
-                if (wmiObject == null)
+                try
                 {
+                    var searchCollection = new ManagementObjectSearcher("select * from Win32_BIOS").Get();
+
+                    ManagementObject? wmiObject = searchCollection.OfType<ManagementObject>().FirstOrDefault();
+
+                    if (wmiObject == null)
+                    {
+                        return null;
+                    }
+
+                    if (wmiObject["BIOSVersion"] is string)
+                    {
+                        biosInformation.Name = wmiObject["BIOSVersion"].ToString().Trim();
+                    }
+                    else
+                    {
+                        biosInformation.Name = string.Join(" ", (string[])wmiObject["BIOSVersion"]);
+                    }
+
+                    biosInformation.Manufacturer = wmiObject["Manufacturer"].ToString();
+                    biosInformation.SerialNumber = wmiObject["SerialNumber"].ToString();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+
                     return null;
                 }
 
-                if (wmiObject["BIOSVersion"] is string)
-                {
-                    biosInformation.Name = wmiObject["BIOSVersion"].ToString().Trim();
-                } else
-                {
-                    biosInformation.Name = string.Join(" ", (string[])wmiObject["BIOSVersion"]);
-                }
-
-                biosInformation.Manufacturer = wmiObject["Manufacturer"].ToString();
-                biosInformation.SerialNumber = wmiObject["SerialNumber"].ToString();
+                return biosInformation;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-
-                return null;
-            }
-
-            return biosInformation;
         }
 
-        public override List<CPUInformation> GetCPUInformation()
+        public override List<CPUInformation> CPUInformation
         {
-            var cpuList = new List<CPUInformation>();
-
-            try
+            get
             {
-                var searchCollection = new ManagementObjectSearcher("select * from Win32_Processor").Get();
+                var cpuList = new List<CPUInformation>();
 
-                foreach (var wmiObject in searchCollection)
+                try
                 {
-                    var cpuInformation = new CPUInformation();
+                    var searchCollection = new ManagementObjectSearcher("select * from Win32_Processor").Get();
 
-                    cpuInformation.CPUManufacturer = wmiObject["Manufacturer"].ToString().Trim();
-                    cpuInformation.CPUName = wmiObject["Name"].ToString().Trim();
-                    cpuInformation.CoreCount = Convert.ToInt32(wmiObject["NumberOfCores"]);
-                    cpuInformation.LogicalCoreCount = Convert.ToInt32(wmiObject["NumberOfLogicalProcessors"]);
-                    cpuInformation.CPUCoreSpeed = wmiObject["MaxClockSpeed"].ToString();
-
-                    cpuList.Add(cpuInformation);
-                }
-            } catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-
-                return null;
-            }
-
-            return cpuList;
-        }
-
-        public override List<NetworkAdapter>? GetNetworkAdapters()
-        {
-            var networkAdapters = new List<NetworkAdapter>();
-
-            try
-            {    
-                foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-                {
-                    var networkAdapter = new NetworkAdapter
+                    foreach (var wmiObject in searchCollection)
                     {
-                        ConnectionName = nic.Name,
-                        Name = nic.Description,
-                        NICType = nic.NetworkInterfaceType.ToString(),
-                        Status = nic.OperationalStatus.ToString(),
-                        Speed = nic.Speed
-                    };
+                        var cpuInformation = new CPUInformation();
 
-                    networkAdapters.Add(networkAdapter);
+                        cpuInformation.CPUManufacturer = wmiObject["Manufacturer"].ToString().Trim();
+                        cpuInformation.CPUName = wmiObject["Name"].ToString().Trim();
+                        cpuInformation.CoreCount = Convert.ToInt32(wmiObject["NumberOfCores"]);
+                        cpuInformation.LogicalCoreCount = Convert.ToInt32(wmiObject["NumberOfLogicalProcessors"]);
+                        cpuInformation.CPUCoreSpeed = wmiObject["MaxClockSpeed"].ToString();
+
+                        cpuList.Add(cpuInformation);
+                    }
                 }
-            } catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
 
-                return null;
+                    return null;
+                }
+
+                return cpuList;
             }
-
-            return networkAdapters;
         }
 
-        public override List<StorageDevice>? GetStorageDevices()
+        public override List<NetworkAdapter>? NetworkAdapters
         {
-            var storageDevices = new List<StorageDevice>();
-
-            try
+            get
             {
-                var searchCollection = new ManagementObjectSearcher("select * from Win32_DiskDrive").Get();
+                var networkAdapters = new List<NetworkAdapter>();
 
-                foreach (var obj in searchCollection)
+                try
                 {
-                    var drive = new StorageDevice
+                    foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
                     {
-                        Name = obj["Model"].ToString(),
-                        StorageType = obj["MediaType"].ToString(),
-                        Size = Convert.ToUInt64(obj["Size"]),
-                        Status = obj["Status"].ToString(),
-                        Firmware = obj["FirmwareRevision"].ToString()
-                    };
+                        var networkAdapter = new NetworkAdapter
+                        {
+                            ConnectionName = nic.Name,
+                            Name = nic.Description,
+                            NICType = nic.NetworkInterfaceType.ToString(),
+                            Status = nic.OperationalStatus.ToString(),
+                            Speed = nic.Speed
+                        };
 
-                    storageDevices.Add(drive);
+                        networkAdapters.Add(networkAdapter);
+                    }
                 }
-            } catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
 
-                return null;
+                    return null;
+                }
+
+                return networkAdapters;
             }
-
-            return storageDevices;
         }
 
-        public override List<SystemMemory> GetSystemMemory()
+        public override List<StorageDevice>? StorageDevices
         {
-            var systemMemory = new List<SystemMemory>();
-
-            try
+            get
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
+                var storageDevices = new List<StorageDevice>();
 
-                foreach (var obj in searcher.Get())
+                try
                 {
-                    var memory = new SystemMemory
+                    var searchCollection = new ManagementObjectSearcher("select * from Win32_DiskDrive").Get();
+
+                    foreach (var obj in searchCollection)
                     {
-                        Manufacturer = obj["Manufacturer"].ToString(),
-                        ClockSpeed = Convert.ToInt32(obj["Speed"]),
-                        SerialNumber = obj["SerialNumber"].ToString(),
-                        Size = Convert.ToUInt64(obj["Capacity"])
-                    };
+                        var drive = new StorageDevice
+                        {
+                            Name = obj["Model"].ToString(),
+                            StorageType = obj["MediaType"].ToString(),
+                            Size = Convert.ToUInt64(obj["Size"]),
+                            Status = obj["Status"].ToString(),
+                            Firmware = obj["FirmwareRevision"].ToString()
+                        };
 
-                    systemMemory.Add(memory);
+                        storageDevices.Add(drive);
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+
+                    return null;
+                }
+
+                return storageDevices;
             }
-            catch (Exception ex)
+        }
+
+        public override List<SystemMemory> SystemMemory
+        {
+            get
             {
-                Console.WriteLine(ex.Message);
+                var systemMemory = new List<SystemMemory>();
 
-                return null;
+                try
+                {
+                    ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
+
+                    foreach (var obj in searcher.Get())
+                    {
+                        var memory = new SystemMemory
+                        {
+                            Manufacturer = obj["Manufacturer"].ToString(),
+                            ClockSpeed = Convert.ToInt32(obj["Speed"]),
+                            SerialNumber = obj["SerialNumber"].ToString(),
+                            Size = Convert.ToUInt64(obj["Capacity"])
+                        };
+
+                        systemMemory.Add(memory);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+
+                    return null;
+                }
+
+                return systemMemory;
             }
-
-            return systemMemory;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace WDYDH.Tests
         {
             var winInfo = new WindowsHardwareInformation();
 
-            var cpu = winInfo.GetCPUInformation();
+            var cpu = winInfo.CPUInformation;
 
             Assert.IsNotNull(cpu);
         }
@@ -25,7 +25,7 @@ namespace WDYDH.Tests
         {
             var winInfo = new WindowsHardwareInformation();
 
-            var bios = winInfo.GetBIOSInformation();
+            var bios = winInfo.BIOSInformation;
 
             Assert.IsNotNull(bios);
         }
@@ -35,7 +35,7 @@ namespace WDYDH.Tests
         {
             var winInfo = new WindowsHardwareInformation();
 
-            var net = winInfo.GetNetworkAdapters();
+            var net = winInfo.NetworkAdapters;
 
             Assert.IsNotNull(net);
         }
@@ -45,7 +45,7 @@ namespace WDYDH.Tests
         {
             var winInfo = new WindowsHardwareInformation();
 
-            var drives = winInfo.GetStorageDevices();
+            var drives = winInfo.StorageDevices;
 
             Assert.IsNotNull(drives);
         }
@@ -55,7 +55,7 @@ namespace WDYDH.Tests
         {
             var winInfo = new WindowsHardwareInformation();
 
-            var memory = winInfo.GetSystemMemory();
+            var memory = winInfo.SystemMemory;
 
             Assert.IsNotNull(memory);
         }
