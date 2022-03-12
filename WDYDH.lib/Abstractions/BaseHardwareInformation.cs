@@ -14,6 +14,6 @@ namespace WDYDH.lib.Windows.Abstractions
 
         public abstract List<SystemMemory> SystemMemory { get; }
 
-        public abstract List<Device> SystemDevices { get; }
+        public abstract List<Device> SystemDeviceDrivers { get; }
     }
 }

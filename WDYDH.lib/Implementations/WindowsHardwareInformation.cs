@@ -160,7 +160,7 @@ namespace WDYDH.lib.Implementations
 
                 try
                 {
-                    ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
+                    ManagementObjectSearcher searcher = new ("root\\CIMV2", "SELECT * FROM Win32_PhysicalMemory");
 
                     foreach (var obj in searcher.Get())
                     {
@@ -186,23 +186,24 @@ namespace WDYDH.lib.Implementations
             }
         }
 
-        public override List<Device> SystemDevices {
+        public override List<Device> SystemDeviceDrivers
+        {
             get
             {
                 var systemDevices = new List<Device>();
 
                 try
                 {
-                    ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_SystemDriver");
+                    ManagementObjectSearcher searcher = new("root\\CIMV2", "SELECT * FROM Win32_SystemDriver");
 
                     foreach (var obj in searcher.Get())
                     {
                         var memory = new Device
                         {
-                            Name = obj["Display Name"].ToString(),
-                            Path = obj["PathName"].ToString(),
+                            Name = obj["DisplayName"]?.ToString(),
+                            Path = obj["PathName"]?.ToString(),
                             Status = obj["State"].ToString(),
-                            Type = obj["ServiceType"].ToString()
+                            Type = obj["ServiceType"]?.ToString()
                         };
 
                         systemDevices.Add(memory);
