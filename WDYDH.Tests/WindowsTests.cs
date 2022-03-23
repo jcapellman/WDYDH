@@ -41,6 +41,16 @@ namespace WDYDH.Tests
         }
 
         [TestMethod]
+        public void GPUInformation()
+        {
+            var winInfo = new WindowsHardwareInformation();
+
+            var gpu = winInfo.GPUs;
+
+            Assert.IsNotNull(gpu);
+        }
+
+        [TestMethod]
         public void SystemDeviceDrivers()
         {
             var winInfo = new WindowsHardwareInformation();

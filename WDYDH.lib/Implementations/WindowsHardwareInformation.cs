@@ -219,5 +219,36 @@ namespace WDYDH.lib.Implementations
                 return systemDevices.OrderBy(a => a.Name).ToList();
             }
         }
+
+        public override List<GPU> GPUs {
+            get
+            {
+                var gpuList = new List<GPU>();
+
+                try
+                {
+                    var searchCollection = new ManagementObjectSearcher("select * from Win32_VideoController").Get();
+
+                    foreach (var wmiObject in searchCollection)
+                    {
+                        var gpuInformation = new GPU();
+
+                        gpuInformation.DriverVersion = wmiObject["DriverVersion"].ToString().Trim();
+                        gpuInformation.Name = wmiObject["Description"].ToString().Trim();
+                        gpuInformation.Memory = (Convert.ToUInt64(wmiObject["AdapterRAM"]) / 1024) / 1024;
+                        
+                        gpuList.Add(gpuInformation);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+
+                    return null;
+                }
+
+                return gpuList;
+            }
+        }
     }
 }
