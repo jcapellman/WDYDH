@@ -10,4 +10,4 @@ A Simple Device Information Library to extract CPU, Memory, Disk, System Drivers
 * Linux
 * macOS
 
-Need to add USB Device, GPU and Device Version Information
+Need to add USB Device and Device Version Information
