@@ -17,5 +17,7 @@ namespace WDYDH.lib.Windows.Abstractions
         public abstract List<Device> SystemDeviceDrivers { get; }
 
         public abstract List<GPU> GPUs { get; }
+
+        public abstract List<Mouse> Mice { get; }
     }
 }

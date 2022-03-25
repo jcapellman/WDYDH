@@ -62,13 +62,14 @@ namespace WDYDH.lib.Implementations
 
                     foreach (var wmiObject in searchCollection)
                     {
-                        var cpuInformation = new CPUInformation();
-
-                        cpuInformation.CPUManufacturer = wmiObject["Manufacturer"].ToString().Trim();
-                        cpuInformation.CPUName = wmiObject["Name"].ToString().Trim();
-                        cpuInformation.CoreCount = Convert.ToInt32(wmiObject["NumberOfCores"]);
-                        cpuInformation.LogicalCoreCount = Convert.ToInt32(wmiObject["NumberOfLogicalProcessors"]);
-                        cpuInformation.CPUCoreSpeed = wmiObject["MaxClockSpeed"].ToString();
+                        var cpuInformation = new CPUInformation
+                        {
+                            CPUManufacturer = wmiObject["Manufacturer"].ToString().Trim(),
+                            CPUName = wmiObject["Name"].ToString().Trim(),
+                            CoreCount = Convert.ToInt32(wmiObject["NumberOfCores"]),
+                            LogicalCoreCount = Convert.ToInt32(wmiObject["NumberOfLogicalProcessors"]),
+                            CPUCoreSpeed = wmiObject["MaxClockSpeed"].ToString()
+                        };
 
                         cpuList.Add(cpuInformation);
                     }
@@ -231,12 +232,13 @@ namespace WDYDH.lib.Implementations
 
                     foreach (var wmiObject in searchCollection)
                     {
-                        var gpuInformation = new GPU();
+                        var gpuInformation = new GPU
+                        {
+                            DriverVersion = wmiObject["DriverVersion"].ToString().Trim(),
+                            Name = wmiObject["Description"].ToString().Trim(),
+                            Memory = (Convert.ToUInt64(wmiObject["AdapterRAM"]) / 1024) / 1024
+                        };
 
-                        gpuInformation.DriverVersion = wmiObject["DriverVersion"].ToString().Trim();
-                        gpuInformation.Name = wmiObject["Description"].ToString().Trim();
-                        gpuInformation.Memory = (Convert.ToUInt64(wmiObject["AdapterRAM"]) / 1024) / 1024;
-                        
                         gpuList.Add(gpuInformation);
                     }
                 }
@@ -248,6 +250,39 @@ namespace WDYDH.lib.Implementations
                 }
 
                 return gpuList;
+            }
+        }
+
+        public override List<Mouse> Mice
+        {
+            get
+            {
+                var mouseList = new List<Mouse>();
+
+                try
+                {
+                    var searchCollection = new ManagementObjectSearcher("select * from Win32_PointingDevice").Get();
+
+                    foreach (var wmiObject in searchCollection)
+                    {
+                        var mouse = new Mouse
+                        {
+                            Manufacturer = wmiObject["Manufacturer"].ToString().Trim(),
+                            Name = wmiObject["Name"].ToString().Trim(),
+                            DeviceID = wmiObject["DeviceID"].ToString().Trim()
+                        };
+
+                        mouseList.Add(mouse);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+
+                    return null;
+                }
+
+                return mouseList;
             }
         }
     }

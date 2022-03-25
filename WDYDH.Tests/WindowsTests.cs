@@ -51,6 +51,16 @@ namespace WDYDH.Tests
         }
 
         [TestMethod]
+        public void MouseInformation()
+        {
+            var winInfo = new WindowsHardwareInformation();
+
+            var mice = winInfo.Mice;
+
+            Assert.IsNotNull(mice);
+        }
+
+        [TestMethod]
         public void SystemDeviceDrivers()
         {
             var winInfo = new WindowsHardwareInformation();
